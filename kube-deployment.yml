@@ -14,24 +14,7 @@ spec:
       - name: clojure-berlin-2016
         image: dreg.life.uni-leipzig.local/clojure-berlin-2016:<VERSION>
         ports:
-        - containerPort: 80
-        env:
-        - name: PORT
-          value: "80"
-        - name: JVM_OPTS
-          value: -Xmx1g
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 80
-          initialDelaySeconds: 60
-          timeoutSeconds: 1
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 80
-          initialDelaySeconds: 45
-          timeoutSeconds: 1
+        - containerPort: 8080
         resources:
           requests:
             cpu: "125m"

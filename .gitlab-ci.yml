@@ -1,0 +1,64 @@
+image: clojure:lein-2.7.1
+
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  stage: test
+  tags:
+    - docker
+  script:
+    - lein test
+
+build:
+  stage: build
+  tags:
+    - docker
+  script:
+    - sed -i "s/<VERSION>/$(echo $CI_BUILD_REF | cut -c 1-7)/" project.clj
+    - docker build -t dreg.life.uni-leipzig.local/clojure-berlin-2016:$(echo $CI_BUILD_REF | cut -c 1-7) .
+    - docker push dreg.life.uni-leipzig.local/clojure-berlin-2016:$(echo $CI_BUILD_REF | cut -c 1-7)
+
+deploy-branch:
+  stage: deploy
+  environment: test
+  image: dreg.life.uni-leipzig.local/kubectl:0.4
+  tags:
+    - docker
+  script:
+    - sed -i "s/<VERSION>/$(echo $CI_BUILD_REF | cut -c 1-7)/" kube-deployment.yml
+    - kubectl config use-context gitlab-ci-test
+    - kubectl apply -f kube-deployment.yml
+  except:
+    - master
+  when: manual
+
+deploy-master:
+  stage: deploy
+  environment: test
+  image: dreg.life.uni-leipzig.local/kubectl:0.4
+  tags:
+    - docker
+  script:
+    - sed -i "s/<VERSION>/$(echo $CI_BUILD_REF | cut -c 1-7)/" kube-deployment.yml
+    - kubectl config use-context gitlab-ci-test
+    - kubectl apply -f kube-deployment.yml
+  only:
+    - master
+
+deploy-prod:
+  stage: deploy
+  environment: prod
+  image: dreg.life.uni-leipzig.local/kubectl:0.4
+  tags:
+    - docker
+  script:
+    - sed -i "s/<VERSION>/$(echo $CI_BUILD_REF | cut -c 1-7)/" kube-deployment.yml
+    - sed -i "s/lens-sq-test/lens-sq-prod/" kube-deployment.yml
+    - kubectl config use-context gitlab-ci-prod-a
+    - kubectl apply -f kube-deployment.yml
+  only:
+    - master
+  when: manual

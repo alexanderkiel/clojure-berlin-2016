@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: clojure-berlin-2016
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: lens
+        service: clojure-berlin-2016
+    spec:
+      containers:
+      - name: clojure-berlin-2016
+        image: dreg.life.uni-leipzig.local/clojure-berlin-2016:<VERSION>
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+        - name: JVM_OPTS
+          value: -Xmx1g
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 60
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 45
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: "125m"
+            memory: "1Gi"
+          limits:
+            cpu: 1
+            memory: "2Gi"

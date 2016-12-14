@@ -1,6 +1,6 @@
-(defproject clojure-berlin-2016 "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+(defproject clojure-berlin-2016 "<VERSION>"
+  :description "A simple service showcasing continuous deployment on Kubernetes using GitLab CI."
+  :url "https://github.com/alexanderkiel/clojure-berlin-2016"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 

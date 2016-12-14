@@ -56,7 +56,6 @@ deploy-prod:
     - docker
   script:
     - sed -i "s/<VERSION>/$(echo $CI_BUILD_REF | cut -c 1-7)/" kube-deployment.yml
-    - sed -i "s/lens-sq-test/lens-sq-prod/" kube-deployment.yml
     - kubectl config use-context gitlab-ci-prod-a
     - kubectl apply -f kube-deployment.yml
   only:

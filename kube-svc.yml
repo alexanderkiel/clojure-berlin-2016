@@ -8,7 +8,7 @@ spec:
   type: NodePort
   ports:
   - port: 80
-    targetPort: 80
+    targetPort: 8080
     protocol: TCP
   selector:
     service: clojure-berlin-2016

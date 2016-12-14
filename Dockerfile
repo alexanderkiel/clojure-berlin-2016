@@ -9,4 +9,4 @@ RUN lein with-profile production deps
 
 EXPOSE 80
 
-CMD ["lein" "run"]
+CMD ["lein", "with-profile", "production", "run"]
